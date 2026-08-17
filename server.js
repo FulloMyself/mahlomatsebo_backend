@@ -12,6 +12,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
 const allowedOrigins = [
   process.env.CLIENT_URL,
   'https://fullomyself.github.io',
@@ -29,6 +30,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.warn(`Blocked CORS origin: ${origin}`);
         callback(new Error('Not allowed by CORS'));
       }
     },
