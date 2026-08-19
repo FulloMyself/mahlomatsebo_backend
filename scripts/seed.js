@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const User = require('../models/User');
 const Training = require('../models/Training');
 const Enrollment = require('../models/Enrollment');
+const Schedule = require('../models/Schedule');
 
 dotenv.config();
 
@@ -14,6 +15,26 @@ const users = [
   { name: 'Training Facilitator', email: 'staff@mahlomatsebosolutions.co.za', password: 'staff123', role: 'staff', phone: '082 740 1371', department: 'Training' },
   { name: 'Demo Learner', email: 'student@mahlomatsebosolutions.co.za', password: 'student123', role: 'student', phone: '071 000 0000', department: 'Student Services' },
 ];
+
+const schedulesSeed = [
+  {
+    title: 'First Aid - Session 1',
+    description: 'Intro to First Aid',
+    start: new Date('2026-08-25T09:00:00Z'),
+    end: new Date('2026-08-25T11:00:00Z'),
+    location: 'Training Room A',
+    status: 'scheduled',
+  },
+  {
+    title: 'ECD Foundations - Week 1',
+    description: 'Foundations and classroom setup',
+    start: new Date('2026-09-02T08:00:00Z'),
+    end: new Date('2026-09-02T12:00:00Z'),
+    location: 'Training Hall',
+    status: 'scheduled',
+  },
+];
+
 
 const programmes = [
   {
@@ -83,6 +104,7 @@ async function seed() {
     }
 
     const studentUser = createdUsers.find((user) => user.role === 'student');
+    const staffUser = createdUsers.find((user) => user.role === 'staff');
     const firstTraining = await Training.findOne({ title: 'ECD Foundations Programme' });
     if (studentUser && firstTraining) {
       await Enrollment.create({
@@ -93,6 +115,24 @@ async function seed() {
         notes: 'Interested in ECD leadership pathway.',
       });
       console.log('Created sample student application');
+    }
+
+    // Create sample schedules assigned to staff with the demo student as participant
+    if (staffUser) {
+      for (const s of schedulesSeed) {
+        const created = await Schedule.create({
+          title: s.title,
+          description: s.description,
+          start: s.start,
+          end: s.end,
+          staff: staffUser._id,
+          students: studentUser ? [studentUser._id] : [],
+          location: s.location,
+          status: s.status || 'scheduled',
+          createdBy: adminUser._id,
+        });
+        console.log(`Created schedule: ${created.title}`);
+      }
     }
 
     console.log('Seeding complete');

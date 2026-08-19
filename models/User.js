@@ -64,6 +64,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    // Reference to the staff user assigned to this student (null for staff/admin or unassigned students)
+    assignedStaff: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
     status: {
       type: String,
       enum: ['active', 'pending', 'inactive'],
