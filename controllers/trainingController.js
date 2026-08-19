@@ -93,6 +93,15 @@ const updateEnrollmentStatus = async (req, res) => {
       return res.status(404).json({ message: 'Application not found.' });
     }
 
+    // If attempting to mark as enrolled, enforce single-active-enrolment invariant
+    if (status === 'enrolled') {
+      // Check if the user already has another enrolled application
+      const existing = await Enrollment.findOne({ user: enrollment.user._id, status: 'enrolled', _id: { $ne: enrollment._id } });
+      if (existing) {
+        return res.status(409).json({ message: 'Student already has an active enrolled programme.' });
+      }
+    }
+
     enrollment.status = status || enrollment.status;
     enrollment.notes = notes || enrollment.notes;
     enrollment.processedBy = req.user._id;

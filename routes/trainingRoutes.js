@@ -8,7 +8,8 @@ const router = express.Router();
 router.get('/', protect, getTrainings);
 router.post('/', protect, authorize('admin', 'staff'), createTraining);
 router.post('/apply', protect, applyToTraining);
-router.put('/applications/:id/status', protect, authorize('admin', 'staff'), updateEnrollmentStatus);
+// Only admins can change application status to enrolled — enforce on server
+router.put('/applications/:id/status', protect, authorize('admin'), updateEnrollmentStatus);
 router.get('/:id', protect, getTrainingById);
 
 module.exports = router;
