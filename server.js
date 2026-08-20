@@ -9,6 +9,8 @@ const trainingRoutes = require('./routes/trainingRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 const staffRoutes = require('./routes/staffRoutes');
+const cubicleRoutes = require('./routes/cubicleRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 dotenv.config();
 
@@ -53,6 +55,8 @@ app.use('/api/trainings', trainingRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/staff', staffRoutes);
+app.use('/api/cubicles', cubicleRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
