@@ -65,6 +65,20 @@ const applyToTraining = async (req, res) => {
       return res.status(404).json({ message: 'Training not found.' });
     }
 
+    // Check if student already has an active enrollment
+    const activeEnrollment = await Enrollment.findOne({
+      user: req.user._id,
+      status: { $in: ['applied', 'accepted', 'enrolled'] },
+    });
+
+    if (activeEnrollment) {
+      return res.status(409).json({ 
+        message: 'You already have an active course/program enrollment. Complete it before applying for another.',
+        currentEnrollment: activeEnrollment
+      });
+    }
+
+    // Check for duplicate application
     const existing = await Enrollment.findOne({ user: req.user._id, training: trainingId });
     if (existing) {
       return res.status(409).json({ message: 'You have already applied for this course or programme.' });
@@ -96,10 +110,21 @@ const updateEnrollmentStatus = async (req, res) => {
     // If attempting to mark as enrolled, enforce single-active-enrolment invariant
     if (status === 'enrolled') {
       // Check if the user already has another enrolled application
-      const existing = await Enrollment.findOne({ user: enrollment.user._id, status: 'enrolled', _id: { $ne: enrollment._id } });
+      const existing = await Enrollment.findOne({ 
+        user: enrollment.user._id, 
+        status: 'enrolled', 
+        _id: { $ne: enrollment._id } 
+      });
       if (existing) {
-        return res.status(409).json({ message: 'Student already has an active enrolled programme.' });
+        return res.status(409).json({ 
+          message: 'Student already has an active enrolled programme.' 
+        });
       }
+    }
+
+    // If marking as completed, allow student to apply for new programs
+    if (status === 'completed') {
+      enrollment.completionDate = new Date();
     }
 
     enrollment.status = status || enrollment.status;
