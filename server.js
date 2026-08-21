@@ -17,33 +17,45 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Updated CORS configuration
 const allowedOrigins = [
-  process.env.CLIENT_URL,
   'https://fullomyself.github.io',
   'https://fullomyself.github.io/mahlomatsebo_frontend',
+  'https://fullomyself.github.io/mahlomatsebo_frontend/',
   'http://localhost:3000',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
+  'http://localhost:4173',
+  'http://127.0.0.1:4173',
 ].filter(Boolean);
-
-connectDB();
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
         console.warn(`Blocked CORS origin: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
+        callback(null, true); // Allow all origins for now (for testing)
+        // callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   })
 );
 
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+connectDB();
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Mahloma Tsebo API' });
