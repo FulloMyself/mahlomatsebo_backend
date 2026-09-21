@@ -7,7 +7,7 @@ const authorize = require('../middleware/roleMiddleware');
 const router = express.Router();
 
 router.get('/dashboard', protect, getDashboardData);
-router.get('/', protect, authorize('admin', 'staff'), getUsers);
+router.get('/', protect, authorize('admin', 'staff', 'hr'), getUsers);
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUser);
 router.put('/profile/password', protect, changePassword);

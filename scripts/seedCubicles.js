@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Cubicle = require('./models/Cubicle');
-const User = require('./models/User');
+const Cubicle = require('../models/Cubicle');
+const User = require('../models/User');
 
 dotenv.config();
 

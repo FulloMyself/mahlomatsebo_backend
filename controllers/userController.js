@@ -60,6 +60,7 @@ const getDashboardData = async (req, res) => {
     const totalUsers = users.length;
     const totalStudents = users.filter((user) => user.role === 'student').length;
     const totalStaff = users.filter((user) => user.role === 'staff').length;
+    const totalHR = users.filter((user) => user.role === 'hr').length;
     const totalAdmins = users.filter((user) => user.role === 'admin').length;
     const activePrograms = trainings.filter((training) => training.status !== 'completed').length;
 
@@ -78,6 +79,7 @@ const getDashboardData = async (req, res) => {
         totalUsers,
         totalStudents,
         totalStaff,
+        totalHR,
         totalAdmins,
         activePrograms,
         totalApplications: applications.length,

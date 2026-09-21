@@ -12,6 +12,7 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mahloma';
 
 const users = [
   { name: 'System Administrator', email: 'admin@mahlomatsebosolutions.co.za', password: 'admin123', role: 'admin', phone: '064 649 5947', department: 'Operations' },
+  { name: 'HR Manager', email: 'hr@mahlomatsebosolutions.co.za', password: 'hr123', role: 'hr', phone: '082 740 1371', department: 'Human Resources' },
   { name: 'Training Facilitator', email: 'staff@mahlomatsebosolutions.co.za', password: 'staff123', role: 'staff', phone: '082 740 1371', department: 'Training' },
   { name: 'Demo Learner', email: 'student@mahlomatsebosolutions.co.za', password: 'student123', role: 'student', phone: '071 000 0000', department: 'Student Services' },
 ];
