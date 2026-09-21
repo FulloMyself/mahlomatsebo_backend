@@ -5,9 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js",
-    "seed": "node scripts/seed.js",
-    "seed:hr": "node scripts/seedHrUser.js"
+    "dev": "node --watch server.js"
   },
   "keywords": [
     "express",
